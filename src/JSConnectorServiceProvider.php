@@ -18,12 +18,6 @@ class JSConnectorServiceProvider extends ServiceProvider
         $this->app->singleton('JSConnector', function ($app) {
             return new JSConnectorService();
         });
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                \Amohamed\JSConnector\Console\Commands\JsConnectorServeCommand::class,
-            ]);
-        }
     }
 
     /**
@@ -36,5 +30,11 @@ class JSConnectorServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/jsconnector.php' => config_path('jsconnector.php'),
         ], 'config');
-    }    
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                JsConnectorServeCommand::class
+            ]);
+        }
+    }
 }

@@ -28,6 +28,28 @@ return [
 ];
 ```
 
+You can customize the values in the .env file like so:
+
+```bash
+JS_CONNECTOR_API_URL=http://localhost:3000/api
+JS_CONNECTOR_RETRY_TIMES=3
+JS_CONNECTOR_RETRY_INTERVAL=100
+```
+
+## Starting and Stopping the Node.js Server
+
+Before you can start making requests with JSConnector, you need to ensure that the Node.js server is running. You can start the server with the provided artisan command:
+
+```bash
+php artisan jsconnector:serve
+```
+
+To stop the running server, you can use:
+
+```bash
+php artisan jsconnector:stop
+```
+
 ## Usage
 
 Here is a basic example of how to use the JS Connector:
@@ -47,6 +69,8 @@ npm install -S langchain
 Then, on your Node.js server, you can create a JavaScript file where you import and initialize LangChain:
 
 ```javascript
+require('dotenv').config();
+
 const { OpenAI } = require('langchain/llms/openai');
 const { BufferMemory } = require('langchain/memory');
 const { ConversationChain } = require('langchain/chains');
@@ -67,7 +91,7 @@ app.post('/chat', async (req, res) => {
     const result = await chain.call({ input: req.body.input });
     console.log(`API response: ${JSON.stringify(result)}`);
     res.send(result);
-  });
+});
 
 app.listen(3000, () => {
     console.log('Langchain server running on port 3000');
@@ -97,17 +121,12 @@ class LangChainController extends Controller
         return response()->json(['response' => $response]);
     }
 }
+
 ```
+
+`Route::post('/chat', 'App\Http\Controllers\LangChainController@chat');`
 
 This will send the response from the LangChain JS service back to the client.
-
-## Starting the server
-
-To start the Node.js server, use the provided command:
-
-```bash
-php artisan jsconnector:serve
-```
 
 ## Testing
 

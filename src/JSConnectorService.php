@@ -2,13 +2,17 @@
 
 namespace Amohamed\JSConnector;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Http;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Artisan;
+use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
 
 class JSConnectorService
 {
@@ -23,13 +27,14 @@ class JSConnectorService
             // Retry on connection timeouts or server errors
             return $exception instanceof RequestException || ($response && $response->getStatusCode() >= 500);
         }));
-
-        $this->baseUrl = config('JSConnector.api_url');
+        // C:\laragon\www\langchain-laravel\config\jsconnector.php
+        $this->baseUrl = config('jsconnector.api_url', 'http://localhost:3000');
+        Log::info('baseUrl: ' . $this->baseUrl);
 
         $this->client = new Client([
             'base_uri' => $this->baseUrl,
             'handler' => $handlerStack,
-            'timeout' => config('JSConnector.timeout', 30),
+            'timeout' => config('jsconnector.timeout', 30),
         ]);
     }
 
@@ -55,10 +60,11 @@ class JSConnectorService
 
     protected function request($method, $endpoint, $data = [], $query = [])
     {
-        $this->startServerIfNotRunning();
+        // $this->startServerIfNotRunning();
 
         $url = $this->baseUrl . '/' . ltrim($endpoint, '/');
-
+        Log::info('url: ' . $url);
+        Log::info('data: ' . json_encode($data));
         if ($method === 'GET' && !empty($query)) {
             $url .= '?' . http_build_query($query);
         }
@@ -74,4 +80,58 @@ class JSConnectorService
             return response()->json(['error' => 'Server error. Please try again later.'], 500);
         }
     }
+
+    // //check if the command jsconnector is not running if not then run the command
+    // protected function startServerIfNotRunning()
+    // {
+    //     $url = $this->baseUrl . '/healthcheck';
+
+    //     try {
+    //         $response = Http::get($url);
+
+    //         if ($response->successful()) {
+    //             Log::info('Server is running');
+    //             return true;
+    //         }
+    //     } catch (\Exception $e) {
+    //         if ($e instanceof \GuzzleHttp\Exception\ConnectException) {
+    //             // If the server is down, start it
+    //             $command = ['node', env('JSCONNECTOR_SERVER_PATH', 'resources/js/langchain.cjs')];
+    //             $process = Process::fromShellCommandline(implode(' ', $command));
+
+    //             try {
+    //                 // Run the process in the background
+    //                 $process->start();
+
+    //                 // Immediately return, letting the request processing continue
+    //                 return true;
+    //             } catch (\Exception $exception) {
+    //                 Log::error('Process failed. Error: ' . $exception->getMessage());
+
+    //                 // Show error to user
+    //                 return response()->json(['error' => 'Server could not be started.'], 500);
+    //             }
+    //         }
+    //     }
+
+    //     return false;
+    // }
+
+    // public function isServerRunning()
+    // {
+    //     $url = $this->baseUrl . '/healthcheck';
+
+    //     try {
+    //         $response = Http::get($url);
+
+    //         if ($response->successful()) {
+    //             return true;
+    //         }
+    //     } catch (\Exception $e) {
+    //         // Log the error
+    //         Log::error('Error checking server health: ' . $e->getMessage());
+    //     }
+
+    //     return false;
+    // }
 }
