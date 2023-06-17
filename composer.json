@@ -1,0 +1,37 @@
+{
+    "name": "amohamed/jsconnector",
+    "description": "JSConnector Laravel Package provides an easy way to integrate the JSConnector JavaScript library into your Laravel application. This package offers a simple facade to interact with the JSConnector library, enabling developers to leverage the power of OpenAI's language models in their Laravel projects without the hassle of directly managing communication between PHP and JavaScript.",
+    "type": "project",
+    "require": {
+        "php": ">=7.2",
+        "doctrine/dbal": ">=2.10",
+        "guzzlehttp/guzzle": ">=7.0.1",
+        "laravel/framework": ">=8.0",
+        "illuminate/support": ">=8.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Laravel\\JSConnector\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Abdallah Mohamed",
+            "email": "abdal_cascad@hotmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Amohamed\\JSConnector\\JSConnectorServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": ">=9.5.10",
+        "orchestra/testbench": "*",
+        "orchestra/testbench-core": "^9.0"
+    }
+}
