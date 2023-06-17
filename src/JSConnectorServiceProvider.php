@@ -34,7 +34,7 @@ class JSConnectorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/jsconnector.php' => config_path('jsconnector.php'),
+            __DIR__.'/config/jsconnector.php' => config_path('jsconnector.php'),
         ], 'config');
-    }
+    }    
 }

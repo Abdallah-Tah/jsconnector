@@ -1,7 +1,8 @@
 <?php
+
 /**
  * Configuration file for JSConnector package.
- * 
+ *
  * @package Laravel/JSConnector
  * @author Abdallah Mohamed
  */
