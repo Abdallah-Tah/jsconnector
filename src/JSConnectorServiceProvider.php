@@ -4,6 +4,7 @@ namespace Amohamed\JSConnector;
 
 use Illuminate\Support\ServiceProvider;
 use Amohamed\JSConnector\JSConnectorService;
+use Amohamed\JSConnector\Console\Commands\JsConnectorStopCommand;
 use Amohamed\JSConnector\Console\Commands\JsConnectorServeCommand;
 
 class JSConnectorServiceProvider extends ServiceProvider
@@ -33,7 +34,8 @@ class JSConnectorServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                JsConnectorServeCommand::class
+                JsConnectorServeCommand::class,
+                JsConnectorStopCommand::class
             ]);
         }
     }
