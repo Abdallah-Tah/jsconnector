@@ -12,7 +12,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Laravel\\JSConnector\\": "src/"
+            "Amohamed\\JSConnector\\": "src/"
         }
     },
     "authors": [
